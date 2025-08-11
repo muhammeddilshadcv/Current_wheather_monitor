@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden; /* Prevent overflow from waves */
+      background-color: #000; /* Keep the black background */
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background-color: #000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    input, button {
+      padding: 15px;
+      margin-top: 10px;
+      width: 80%;
+      font-size: 16px;
+      border-radius: 25px; /* Rounded corners */
+      border: none;
+      outline: none;
+      transition: all 0.3s ease; /* Smooth transition */
+    }
+
+    input {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    button {
+      background-color: #FFD700; /* Gold color */
+      color: black;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(255, 215, 0, 0.5);
+    }
+
+    button:hover {
+      background-color: #FFC107; /* Lighter gold on hover */
+      transform: translateY(-2px); /* Lift effect */
+    }
+
+    #weatherResult {
+      margin-top: 20px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 90vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      position: relative;
+      z-index: 1; /* Ensure content is above the waves */
+    }
+
+    .hero-content h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .hero-content p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    /* Wave Background */
+    .wave {
+      position: absolute;
+      left: 50%;
+      width: 200%;
+      height: 100px;
+      background: rgba(255, 215, 0, 0.5);
+      border-radius: 50%;
+      animation: wave 6s linear infinite;
+      transform: translateX(-50%);
+      z-index: 0; /* Ensure wave is below the content */
+    }
+
+    /* Create multiple waves with different animations */
+    .wave:nth-child(1) { animation-delay: 0s; height: 80px; bottom: 0; }
+    .wave:nth-child(2) { animation-delay: 1s; height: 100px; bottom: 0; }
+    .wave:nth-child(3) { animation-delay: 2s; height: 90px; bottom: 0; }
+    .wave:nth-child(4) { animation-delay: 3s; height: 70px; bottom: 0; }
+    .wave:nth-child(5) { animation-delay: 4s; height: 110px; bottom: 0; }
+
+    /* Center Wave */
+    .center-wave {
+      position: absolute;
+      top: 40%; /* Adjust the position as needed */
+      left: 50%;
+      width: 150%;
+      height: 50px; /* Height of the center wave */
+      background: rgba(255, 215, 0, 0.7); /* Slightly darker yellow */
+      border-radius: 50%;
+      animation: centerWave 4s linear infinite;
+      transform: translateX(-50%);
+      z-index: 0; /* Ensure wave is below the content */
+    }
+
+    @keyframes wave {
+      0% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-20px);
+      }
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes centerWave {
+      0% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Weather Dashboard</div>
+  </header>
+
+  <section class="hero">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="center-wave"></div> <!-- Center wave -->
+    <div class="hero-content">
+      <h1>Check the Weather</h1>
+      <input type="text" id="cityInput" placeholder="Enter city name">
+      <br>
+      <button onclick="getWeather()">Get Weather</button>
+      <div id="weatherResult"></div>
+    </div>
+  </section>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value;
+      const apiKey = "c6e0e8b2566971605f88af25fae7db1c"; 
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.cod === 200) {
+          const weatherHtml = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <p>🌡️ Temp: ${data.main.temp}°C</p>
+            <p>💧 Humidity: ${data.main.humidity}%</p>
+            <p>🌥️ Condition: ${data.weather[0].description}</p>
+          `;
+          document.getElementById("weatherResult").innerHTML = weatherHtml;
+        } else {
+          document.getElementById("weatherResult").innerHTML = `<p>${data.message}</p>`;
+        }
+      } catch (error) {
+        document.getElementById("weatherResult").innerHTML = `<p>Error fetching data</p>`;
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
