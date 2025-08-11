@@ -38,5 +38,6 @@ const apiKey = "YOUR_API_KEY";
 ├── weather_monitor.html   # Main HTML file with CSS & JS included
 ```
 
+![Current Weather Screenshot](https://raw.githubusercontent.com/muhammeddilshadcv/Current_wheather_monitor/main/Screenshot%202025-08-11%20135937.png)
 
 
